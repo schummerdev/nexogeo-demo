@@ -1,0 +1,197 @@
+# PLANEJAMENTO NEXOGEO2 - SISTEMA DE GESTÃO DE PROMOÇÕES
+## Última atualização: 07/09/2025
+
+### 🎯 FASE ATUAL: CORREÇÕES CRÍTICAS E OTIMIZAÇÕES (SETEMBRO 2025)
+
+## ✅ CONCLUÍDO RECENTEMENTE:
+
+### 🔧 Correções de Constraint e Validações
+- [✅] Tratamento adequado de violações de constraint única no backend
+- [✅] Mensagens de erro específicas para telefones duplicados por promoção
+- [✅] Melhoramento do tratamento de erro 409 no frontend
+- [✅] Adição de debugging extensivo para troubleshooting
+- [✅] Commit: a3dd6b4 - Sistema robusto de constraint handling
+
+### 🎥 Sistema de Vídeo Melhorado
+- [✅] Suporte completo para vídeos locais do Windows (C:\caminho\video.mp4)
+- [✅] Conversão automática para protocolo file:// 
+- [✅] Remoção de policy violations (picture-in-picture)
+- [✅] Otimização de re-renderização com keys estáticas
+- [✅] Player universal com fallback para YouTube e arquivos locais
+
+### 📊 Contagem de Participantes Corrigida
+- [✅] Implementação de COUNT() nas queries de promoções
+- [✅] LEFT JOIN com tabela participantes para contagem real
+- [✅] Atualização dinâmica da interface sem refresh
+- [✅] Correção tanto para lista geral quanto promoção específica
+
+### 🎨 Interface e Performance
+- [✅] Eliminação de warnings de policy violation no console
+- [✅] Redução significativa de re-renders desnecessários
+- [✅] Melhoramento de responsividade móvel
+- [✅] Otimização de carregamento de componentes
+
+## 🔄 EM ANDAMENTO:
+
+### 🚀 Deploy e Testes
+- [ ] Validação das correções no ambiente Vercel
+- [ ] Testes com vídeos locais em diferentes browsers
+- [ ] Verificação de performance após otimizações
+- [ ] Testes de carga com constraint violations
+
+## 📋 PRÓXIMAS PRIORIDADES:
+
+### 🎯 PRIORIDADE ALTA - FUNCIONALIDADES CRÍTICAS
+
+#### 1. Sistema de Sorteio Público Melhorado
+- [ ] Interface pública standalone para exibição de ganhadores
+- [ ] Sistema de countdown dinâmico
+- [ ] Integração robusta com vídeos (YouTube + locais)
+- [ ] Página responsiva para displays públicos
+
+#### 2. Gestão de Usuários e Permissões
+- [ ] Implementação completa de roles (admin/user)
+- [ ] Proteção de rotas baseada em permissões
+- [ ] Interface de gerenciamento de usuários
+- [ ] Auditoria de ações administrativas
+
+#### 3. Analytics e Relatórios
+- [ ] Dashboard de métricas em tempo real
+- [ ] Relatórios de participação por região
+- [ ] Análise de engajamento por promoção
+- [ ] Export de dados em Excel/PDF
+
+### 🎯 PRIORIDADE MÉDIA - MELHORIAS
+
+#### 4. Otimizações de Performance
+- [ ] Implementação de cache Redis
+- [ ] Otimização de queries complexas
+- [ ] Lazy loading de componentes pesados
+- [ ] Bundle splitting para reduzir tamanho
+
+#### 5. Integração Social
+- [ ] Google OAuth completo
+- [ ] Integração com redes sociais
+- [ ] Compartilhamento automático de resultados
+- [ ] Notificações push
+
+### 🎯 PRIORIDADE BAIXA - EXPANSÕES
+
+#### 6. Módulos Avançados
+- [ ] Sistema de premiação multi-nível
+- [ ] Sorteios agendados
+- [ ] Integração com livestreams
+- [ ] API pública para integrações externas
+
+## 🏗️ ARQUITETURA ATUAL:
+
+### Backend (APIs RESTful):
+```
+/api/participantes - CRUD completo com constraint handling
+/api/promocoes - Queries otimizadas com contagem de participantes  
+/api/sorteio - Sistema completo de sorteios
+/api/auth - Autenticação JWT
+/api/upload - Upload de arquivos (vídeos/imagens)
+```
+
+### Frontend (React + Modern UI):
+```
+src/pages/ - Páginas principais do sistema
+src/components/ - Componentes reutilizáveis
+src/services/ - Chamadas API com tratamento de erros
+src/contexts/ - Estados globais (Auth, Toast, Theme)
+src/hooks/ - Custom hooks para funcionalidades específicas
+```
+
+### Banco de Dados (PostgreSQL):
+```
+- participantes (com constraint única por promoção)
+- promocoes (com contagem dinâmica de participantes)  
+- ganhadores (histórico de sorteios)
+- usuarios (sistema de roles)
+- emissoras (dados das empresas)
+```
+
+## 🔍 TESTES NECESSÁRIOS:
+
+### ✅ Testes de Funcionalidade:
+- [✅] Constraint violation handling
+- [✅] Contagem de participantes  
+- [✅] Player de vídeo multiplataforma
+- [ ] Sistema de sorteio público
+- [ ] Responsividade móvel completa
+
+### ✅ Testes de Performance:
+- [✅] Re-renderização otimizada
+- [✅] Carregamento de vídeos
+- [ ] Consultas com muitos participantes
+- [ ] Concurrent access ao sistema
+
+### ⚠️ Testes de Segurança:
+- [ ] Validação de inputs maliciosos
+- [ ] Proteção contra SQL injection
+- [ ] Verificação de permissões
+- [ ] Rate limiting nas APIs
+
+## 🎯 METAS DE SETEMBRO 2025:
+
+1. **✅ CONCLUÍDO**: Sistema robusto de constraint handling
+2. **✅ CONCLUÍDO**: Player de vídeo universal (local + web)
+3. **✅ CONCLUÍDO**: Contagem precisa de participantes
+4. **🔄 EM PROGRESSO**: Interface pública de sorteio otimizada
+5. **📅 PLANEJADO**: Sistema de permissões de usuário
+
+## 📈 MÉTRICAS DE SUCESSO:
+
+### Técnicas:
+- ✅ 0 warnings de policy violation no console
+- ✅ 100% das constraints adequadamente tratadas
+- ✅ Contagem de participantes sincronizada
+- 📊 <2s tempo de carregamento de páginas
+- 📊 >95% uptime no Vercel
+
+### Funcionais:
+- ✅ Suporte completo a vídeos locais Windows
+- ✅ Mensagens de erro específicas e claras
+- ✅ Interface responsiva em todos dispositivos
+- 🎯 Sistema de sorteio público funcionando 100%
+- 🎯 Zero bugs críticos reportados
+
+## 🚧 DEBT TÉCNICO IDENTIFICADO:
+
+### Prioridade Alta:
+- [ ] Implementar testes automatizados para APIs críticas
+- [ ] Documentação técnica completa das APIs
+- [ ] Monitoramento de erros em produção (Sentry/similar)
+
+### Prioridade Média:
+- [ ] Refatoração de componentes muito grandes
+- [ ] Implementação de TypeScript gradual
+- [ ] Otimização de bundle size
+
+### Prioridade Baixa:
+- [ ] Migração para React 18+ features
+- [ ] PWA capabilities
+- [ ] Offline support básico
+
+---
+
+## 🎉 CONQUISTAS PRINCIPAIS ATÉ AGORA:
+
+### ✅ Sistema Completo e Funcional:
+1. **Dashboard interativo** com gráficos modernos e mapas
+2. **Gestão completa de participantes** com edição em tempo real
+3. **Módulo de sorteios** com sistema anti-repetição
+4. **Interface moderna** com múltiplos temas
+5. **Visualização geográfica** avançada
+6. **Sistema de usuários** preparado para roles
+7. **Deploy otimizado** no Vercel
+8. **Tratamento robusto de erros** e constraints
+9. **Player de vídeo universal** para sorteios públicos
+10. **Contagem precisa** de participantes em tempo real
+
+### 🎯 PRÓXIMO MILESTONE:
+**Interface Pública de Sorteio Completa** - Sistema standalone para exibição em TVs/displays públicos com vídeos e countdown dinâmico.
+
+**Status Geral: 🟢 SISTEMA ESTÁVEL E EM PRODUÇÃO**
+**Última versão deployada: a3dd6b4 (07/09/2025)**

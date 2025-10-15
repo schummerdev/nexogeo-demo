@@ -1,0 +1,68 @@
+📁 NEXOGEO-MANUS/
+├── 📁 api/
+│   └── 📄 instalar dependencias.txt
+├── 📁 src/                          ← Pasta principal do projeto
+│   ├── 📁 components/               # Componentes React
+│   │   ├── 📁 CapturaForm/         # Formulário de captura
+│   │   │   ├── 📄 CapturaForm.jsx
+│   │   │   └── 📄 CapturaForm.css
+│   │   └── 📁 LoginForm/           # Tela de login
+│   │       ├── 📄 LoginForm.jsx
+│   │       └── 📄 LoginForm.css
+│   │
+│   ├── 📁 controllers/              # Lógica de negócio
+│   │   ├── 📄 authController.js     # Autenticação
+│   │   └── 📄 participanteController.js # Participantes
+│   │
+│   ├── 📁 routes/                   # Definição de rotas
+│   │   ├── 📄 authRoutes.js         # Rotas de auth
+│   │   └── 📄 participanteRoutes.js # Rotas de participantes
+│   │
+│   ├── 📁 services/                 # Serviços
+│   │   └── 📄 db.js                # Conexão com banco
+│   │
+│   ├── 📁 scripts/                  # Scripts utilitários
+│   │   └── 📄 criarAdmin.js        # Criar usuário admin
+│   │
+│   ├── 📁 node_modules/             # Dependências (gerado)
+│   ├── 📄 app.js                    # Configuração Express
+│   ├── 📄 server.js                 # Ponto de entrada
+│   ├── 📄 package.json              # Dependências npm
+│   ├── 📄 package-lock.json         # Lock de versões
+│   ├── 📄 .env                      # Variáveis de ambiente
+│   ├── 📄 config-example.txt        # Modelo de configuração
+│   ├── 📄 README.md                 # Documentação principal
+│   ├── 📄 ESTRUTURA-ATUAL.md        # Estrutura detalhada
+│   └── 📄 README-LOGIN.md           # Documentação do login
+│
+├── 📄 estrutura Backend-api.txt      # Estrutura planejada
+├── 📄 criar tabelas sql mysql.txt    # Scripts MySQL
+├── 📄 criar tabelas sql postgres.txt # Scripts PostgreSQL
+├── 📄 pastas projeto.txt             # Organização de pastas
+└── 📄 pranejamento.txt              # Planejamento completo
+
+🔑 ARQUIVOS DE CONFIGURAÇÃO IMPORTANTES:
+   • .env                    ← Configurações do banco e JWT
+   • package.json            ← Dependências do projeto
+   • config-example.txt      ← Modelo para configuração
+
+🚀 COMO INICIAR:
+   1. cd src
+   2. npm install
+   3. Configure o .env
+   4. node scripts/criarAdmin.js
+   5. npm start
+
+📱 FUNCIONALIDADES IMPLEMENTADAS:
+   ✅ Sistema de Login
+   ✅ Captura de Participantes
+   ✅ API RESTful
+   ✅ Validação de Dados
+   ✅ Geolocalização
+   ✅ Banco PostgreSQL + PostGIS
+
+🔄 PRÓXIMOS PASSOS:
+   🔒 Middleware de Autenticação
+   📊 Dashboard Administrativo
+   🎯 CRUD de Promoções
+   👥 Gerenciamento de Participantes 

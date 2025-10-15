@@ -1,0 +1,5 @@
+{
+  "name": "Caixa Misteriosa",
+  "description": "Um jogo de sorteio interativo onde os usuários adivinham um produto misterioso com base em dicas geradas pelo Gemini.",
+  "requestFramePermissions": []
+}
