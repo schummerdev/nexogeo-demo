@@ -1,0 +1,63 @@
+╔═══════════════════════════════════════════════════════════════════════╗
+║                    CREDENCIAIS DO ADMINISTRADOR                       ║
+║                         nexogeo-demo                                  ║
+╚═══════════════════════════════════════════════════════════════════════╝
+
+🔐 ACESSO ADMINISTRATIVO
+────────────────────────────────────────────────────────────────────────
+
+Usuário: admin
+Senha:   1a8fa029516db249274331febf642b58
+
+────────────────────────────────────────────────────────────────────────
+
+⚠️  IMPORTANTE - SEGURANÇA:
+
+1. Esta é uma senha temporária gerada automaticamente
+2. MUDE A SENHA IMEDIATAMENTE após o primeiro login
+3. Use uma senha forte com pelo menos:
+   - 12 caracteres
+   - Letras maiúsculas e minúsculas
+   - Números
+   - Caracteres especiais
+
+4. NUNCA compartilhe esta senha
+5. DELETE este arquivo após anotar a senha em local seguro
+
+────────────────────────────────────────────────────────────────────────
+
+📊 INFORMAÇÕES DO BANCO DE DADOS:
+
+Banco: neondb (PostgreSQL 17.5)
+Host:  ep-lucky-base-ac53ya6x-pooler.sa-east-1.aws.neon.tech
+Região: sa-east-1 (São Paulo - AWS)
+
+Tabelas criadas: 15
+- usuarios (1 admin)
+- configuracoes_emissora (dados padrão)
+- promocoes
+- participantes
+- sponsors (1 exemplo: Refrio)
+- products (1 exemplo: geladeira)
+- games
+- submissions
+- public_participants
+- referral_rewards
+- audit_logs (se existir)
+- e outras...
+
+────────────────────────────────────────────────────────────────────────
+
+🌐 PRÓXIMOS PASSOS:
+
+1. Acessar: https://nexogeo-demo.vercel.app (após deploy)
+2. Fazer login com as credenciais acima
+3. Ir em "Configurações" ou "Perfil" e mudar a senha
+4. Configurar dados da emissora em "Configurações"
+
+────────────────────────────────────────────────────────────────────────
+
+📅 Data de criação: 2025-10-16
+🕐 Hora: 04:04 UTC
+
+════════════════════════════════════════════════════════════════════════
