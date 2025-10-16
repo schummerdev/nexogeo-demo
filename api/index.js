@@ -114,6 +114,27 @@ module.exports = async function handler(req, res) {
     });
   }
 
+  // DEBUG ENDPOINT - REMOVER DEPOIS
+  if (route === 'debug' && endpoint === 'check-admin') {
+    try {
+      const userResult = await query('SELECT id, usuario, role, LENGTH(senha_hash) as hash_length FROM usuarios WHERE usuario = $1', ['admin']);
+
+      return res.status(200).json({
+        success: true,
+        found: userResult.rows.length > 0,
+        data: userResult.rows[0] || null,
+        db_url_prefix: process.env.DATABASE_URL?.substring(0, 30) + '...',
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+    }
+  }
+
   // Roteamento baseado em query parameter: /api/?route=auth&endpoint=login
   if (route === 'auth') {
     // Autenticação
