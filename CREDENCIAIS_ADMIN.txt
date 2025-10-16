@@ -1,63 +1,71 @@
 ╔═══════════════════════════════════════════════════════════════════════╗
 ║                    CREDENCIAIS DO ADMINISTRADOR                       ║
 ║                         nexogeo-demo                                  ║
+║                 (BANCO CORRETO DA VERCEL)                             ║
 ╚═══════════════════════════════════════════════════════════════════════╝
 
 🔐 ACESSO ADMINISTRATIVO
 ────────────────────────────────────────────────────────────────────────
 
 Usuário: admin
-Senha:   1a8fa029516db249274331febf642b58
+Senha:   bcbffb4c83e60312d8b029c127524483
 
 ────────────────────────────────────────────────────────────────────────
 
-⚠️  IMPORTANTE - SEGURANÇA:
+✅ TESTADO E FUNCIONANDO!
 
-1. Esta é uma senha temporária gerada automaticamente
-2. MUDE A SENHA IMEDIATAMENTE após o primeiro login
-3. Use uma senha forte com pelo menos:
-   - 12 caracteres
-   - Letras maiúsculas e minúsculas
-   - Números
-   - Caracteres especiais
-
-4. NUNCA compartilhe esta senha
-5. DELETE este arquivo após anotar a senha em local seguro
+O login foi testado via API e FUNCIONA perfeitamente!
 
 ────────────────────────────────────────────────────────────────────────
 
-📊 INFORMAÇÕES DO BANCO DE DADOS:
+⚠️  IMPORTANTE - O QUE ACONTECEU:
 
-Banco: neondb (PostgreSQL 17.5)
-Host:  ep-lucky-base-ac53ya6x-pooler.sa-east-1.aws.neon.tech
-Região: sa-east-1 (São Paulo - AWS)
+Você tinha DOIS bancos de dados Neon diferentes:
 
-Tabelas criadas: 15
-- usuarios (1 admin)
-- configuracoes_emissora (dados padrão)
-- promocoes
-- participantes
-- sponsors (1 exemplo: Refrio)
-- products (1 exemplo: geladeira)
-- games
-- submissions
-- public_participants
-- referral_rewards
-- audit_logs (se existir)
-- e outras...
+1. Banco LOCAL (.env):
+   Host: ep-lucky-base-ac53ya6x-pooler
+   Senha DB: npg_T53ljWIDEqQJ
+
+2. Banco na VERCEL (em produção):
+   Host: ep-hidden-fog-ac2jlx9e-pooler  ← ESTE É O CORRETO!
+   Senha DB: npg_7EADUX3QeGaO
+
+O problema era que você estava resetando a senha no banco LOCAL,
+mas a Vercel estava conectada no banco DIFERENTE (que estava vazio).
+
+AGORA o banco da Vercel foi inicializado corretamente!
 
 ────────────────────────────────────────────────────────────────────────
 
-🌐 PRÓXIMOS PASSOS:
+🌐 FAÇA LOGIN AGORA:
 
-1. Acessar: https://nexogeo-demo.vercel.app (após deploy)
-2. Fazer login com as credenciais acima
-3. Ir em "Configurações" ou "Perfil" e mudar a senha
-4. Configurar dados da emissora em "Configurações"
+1. Acesse: https://nexogeo-demo-6qte95c03-schummerdevs-projects.vercel.app
+2. Use as credenciais acima
+3. FUNCIONARÁ! (já testado via API)
 
 ────────────────────────────────────────────────────────────────────────
 
-📅 Data de criação: 2025-10-16
-🕐 Hora: 04:04 UTC
+🔧 APÓS O LOGIN:
+
+1. Vá em Configurações ou Perfil
+2. MUDE A SENHA para uma senha forte e memorável
+3. Configure os dados da emissora
+4. DELETE este arquivo
+
+────────────────────────────────────────────────────────────────────────
+
+📊 STATUS DO BANCO DE DADOS:
+
+Banco da Vercel (CORRETO):
+- Host: ep-hidden-fog-ac2jlx9e-pooler.sa-east-1.aws.neon.tech
+- Região: São Paulo (sa-east-1)
+- Status: ✅ Inicializado e funcionando
+- Tabelas: 15 criadas
+- Admin: ID 26, role: admin
+
+────────────────────────────────────────────────────────────────────────
+
+📅 Correção realizada: 2025-10-16 às 06:25 UTC
+✅ Login testado e confirmado funcionando!
 
 ════════════════════════════════════════════════════════════════════════
