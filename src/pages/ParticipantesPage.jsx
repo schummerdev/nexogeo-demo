@@ -31,6 +31,8 @@ const ParticipantesPage = () => {
   const [participanteToEdit, setParticipanteToEdit] = useState(null);
   const [includeCaixaMisteriosa, setIncludeCaixaMisteriosa] = useState(true); // Toggle para incluir participantes públicos
   const [participantStats, setParticipantStats] = useState({ total: 0, regular: 0, public: 0 }); // Estatísticas por tipo
+  const [currentPage, setCurrentPage] = useState(1); // Página atual da paginação
+  const ITEMS_PER_PAGE = 50; // Limite de 50 registros por página
 
   // Buscar participantes e promoções ao carregar o componente
   useEffect(() => {
@@ -103,21 +105,49 @@ const ParticipantesPage = () => {
   const filteredParticipantes = useMemo(() => {
     return participantes.filter(participante => {
       // Filtro por texto (nome, telefone, bairro, cidade)
-      const matchesSearch = 
-        !searchText || 
+      const matchesSearch =
+        !searchText ||
         participante.nome.toLowerCase().includes(searchText.toLowerCase()) ||
         participante.telefone.toLowerCase().includes(searchText.toLowerCase()) ||
         participante.bairro.toLowerCase().includes(searchText.toLowerCase()) ||
         participante.cidade.toLowerCase().includes(searchText.toLowerCase());
-      
+
       // Filtro por promoção
-      const matchesPromocao = 
-        filterPromocao === 'todas' || 
+      const matchesPromocao =
+        filterPromocao === 'todas' ||
         participante.promocao === filterPromocao;
-      
+
       return matchesSearch && matchesPromocao;
     });
   }, [participantes, searchText, filterPromocao]);
+
+  // Calcular participantes da página atual
+  const paginatedParticipantes = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredParticipantes.slice(startIndex, endIndex);
+  }, [filteredParticipantes, currentPage, ITEMS_PER_PAGE]);
+
+  // Calcular total de páginas
+  const totalPages = Math.ceil(filteredParticipantes.length / ITEMS_PER_PAGE);
+
+  // Resetar para página 1 quando filtros mudarem
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchText, filterPromocao, includeCaixaMisteriosa]);
+
+  // Funções de navegação de página
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
+    }
+  };
 
   const handleDeleteParticipante = (participanteId) => {
     const participante = participantes.find(p => p.id === participanteId);
@@ -428,8 +458,8 @@ const ParticipantesPage = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredParticipantes.length > 0 ? (
-                filteredParticipantes.map(participante => (
+              {paginatedParticipantes.length > 0 ? (
+                paginatedParticipantes.map(participante => (
                   <tr key={participante.id}>
                     <td>{participante.nome}</td>
                     <td>{participante.telefone}</td>
@@ -503,13 +533,21 @@ const ParticipantesPage = () => {
 
         {/* Paginação */}
         <div className="pagination">
-          <button className="pagination-btn" disabled>
+          <button
+            className="pagination-btn"
+            disabled={currentPage === 1}
+            onClick={goToPreviousPage}
+          >
             ← Anterior
           </button>
           <span className="pagination-info">
-            Página 1 de 1
+            Página {currentPage} de {totalPages || 1} ({filteredParticipantes.length} {filteredParticipantes.length === 1 ? 'registro' : 'registros'})
           </span>
-          <button className="pagination-btn" disabled>
+          <button
+            className="pagination-btn"
+            disabled={currentPage >= totalPages}
+            onClick={goToNextPage}
+          >
             Próxima →
           </button>
         </div>

@@ -34,6 +34,8 @@ const PromocoesPage = () => {
   const [filterStatus, setFilterStatus] = useState('todas');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [promoToDelete, setPromoToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // Página atual da paginação
+  const ITEMS_PER_PAGE = 50; // Limite de 50 registros por página
 
   // Buscar promoções ao carregar o componente
   useEffect(() => {
@@ -172,19 +174,47 @@ const PromocoesPage = () => {
   const filteredPromocoes = useMemo(() => {
     return promocoes.filter(promo => {
       // Filtro por texto (nome ou descrição)
-      const matchesSearch = 
-        !searchText || 
+      const matchesSearch =
+        !searchText ||
         promo.nome.toLowerCase().includes(searchText.toLowerCase()) ||
         promo.descricao.toLowerCase().includes(searchText.toLowerCase());
-      
+
       // Filtro por status
-      const matchesStatus = 
-        filterStatus === 'todas' || 
+      const matchesStatus =
+        filterStatus === 'todas' ||
         promo.status === filterStatus;
-      
+
       return matchesSearch && matchesStatus;
     });
   }, [promocoes, searchText, filterStatus]);
+
+  // Calcular promoções da página atual
+  const paginatedPromocoes = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredPromocoes.slice(startIndex, endIndex);
+  }, [filteredPromocoes, currentPage, ITEMS_PER_PAGE]);
+
+  // Calcular total de páginas
+  const totalPages = Math.ceil(filteredPromocoes.length / ITEMS_PER_PAGE);
+
+  // Resetar para página 1 quando filtros mudarem
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchText, filterStatus]);
+
+  // Funções de navegação de página
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1);
+    }
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
+    }
+  };
 
   if (loading) {
     return (
@@ -277,8 +307,8 @@ const PromocoesPage = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredPromocoes.length > 0 ? (
-                filteredPromocoes.map(promo => (
+              {paginatedPromocoes.length > 0 ? (
+                paginatedPromocoes.map(promo => (
                   <tr key={promo.id}>
                     <td>{promo.nome}</td>
                     <td>{promo.descricao}</td>
@@ -345,13 +375,21 @@ const PromocoesPage = () => {
 
         {/* Paginação */}
         <div className="pagination">
-          <button className="pagination-btn" disabled>
+          <button
+            className="pagination-btn"
+            disabled={currentPage === 1}
+            onClick={goToPreviousPage}
+          >
             ← Anterior
           </button>
           <span className="pagination-info">
-            Página 1 de 1
+            Página {currentPage} de {totalPages || 1} ({filteredPromocoes.length} {filteredPromocoes.length === 1 ? 'registro' : 'registros'})
           </span>
-          <button className="pagination-btn" disabled>
+          <button
+            className="pagination-btn"
+            disabled={currentPage >= totalPages}
+            onClick={goToNextPage}
+          >
             Próxima →
           </button>
         </div>
