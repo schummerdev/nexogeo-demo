@@ -31,7 +31,10 @@
       "Bash(dir:*)",
       "Bash(git remote add:*)",
       "Bash(git branch:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(node:*)",
+      "Bash(PORT=3002 node:*)",
+      "Bash(DATABASE_URL=\"postgresql://neondb_owner:npg_7EADUX3QeGaO@ep-hidden-fog-ac2jlx9e-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require\" node:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
