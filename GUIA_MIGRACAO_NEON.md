@@ -24,7 +24,20 @@ Este guia mostra como migrar dados do banco antigo (`nexogeo_manus`) para o novo
 2. Verifique se a conexão está ativa (ícone verde)
 
 ### 1.3 Executar Script de Exportação
-1. Abra o arquivo: `export-nexogeo-manus.sql`
+
+**⚠️ IMPORTANTE**: Existem 2 versões do script:
+
+**A) Versão Normal** (`export-nexogeo-manus.sql`)
+- Use se as datas estão armazenadas corretamente como TIMESTAMP
+- Mais rápido e direto
+
+**B) Versão Segura** (`export-nexogeo-manus-safe.sql`)  ⭐ **RECOMENDADO**
+- Use se encontrar erro "syntax error at or near 'Sep'"
+- Trata diferentes tipos de dados defensivamente
+- Adiciona valores padrão para campos NULL
+
+**Passos**:
+1. Abra o arquivo: `export-nexogeo-manus-safe.sql` (RECOMENDADO)
 2. **Copie TODO o conteúdo do arquivo**
 3. **Cole no SQL Editor do Neon**
 4. Clique em **"Run"** (ou pressione Ctrl+Enter)
@@ -142,6 +155,21 @@ LIMIT 10;
 
 ## 🔧 Solução de Problemas
 
+### Erro: "syntax error at or near 'Sep'" ou "syntax error at or near 'Oct'"
+**Causa**: Datas armazenadas como texto no banco antigo ao invés de tipo TIMESTAMP
+
+**Solução**: Use o script alternativo `export-nexogeo-manus-safe.sql` que trata diferentes tipos de dados:
+```sql
+-- No SQL Editor do banco nexogeo_manus
+-- Execute o conteúdo de: export-nexogeo-manus-safe.sql
+```
+
+Este script:
+- ✅ Verifica tipo de dados antes de converter
+- ✅ Usa valores padrão para dados inválidos
+- ✅ Trata NULL em campos obrigatórios
+- ✅ Arredonda coordenadas para 6 casas decimais
+
 ### Erro: "duplicate key value violates unique constraint"
 **Causa**: Já existem registros com os mesmos IDs
 
@@ -151,12 +179,15 @@ LIMIT 10;
 TRUNCATE TABLE usuarios RESTART IDENTITY CASCADE;
 TRUNCATE TABLE promocoes RESTART IDENTITY CASCADE;
 TRUNCATE TABLE participantes RESTART IDENTITY CASCADE;
+TRUNCATE TABLE configuracoes_emissora RESTART IDENTITY CASCADE;
 ```
 
 ### Erro: "column does not exist"
 **Causa**: Script de exportação não mapeou corretamente
 
-**Solução**: Verifique se usou o arquivo `export-nexogeo-manus.sql` correto (não o antigo `neon-export-script.sql`)
+**Solução**: Verifique se usou o arquivo correto:
+- **Normal**: `export-nexogeo-manus.sql`
+- **Problemas com datas**: `export-nexogeo-manus-safe.sql`
 
 ### Erro: "relation does not exist"
 **Causa**: Tabelas não foram criadas no banco novo

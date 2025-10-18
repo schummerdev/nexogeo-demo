@@ -8,10 +8,16 @@ Migrar dados do banco antigo **nexogeo_manus** para o novo banco **neondb** (nex
 ## 📁 Arquivos Criados
 
 ### 1. Scripts de Exportação/Importação
-- **`export-nexogeo-manus.sql`** - Script SQL para executar no Neon SQL Editor
+- **`export-nexogeo-manus.sql`** - Script SQL básico para executar no Neon SQL Editor
   - Exporta dados com mapeamento automático de schema
   - Gera comandos INSERT compatíveis com o banco novo
   - Executa no banco origem (nexogeo_manus)
+
+- **`export-nexogeo-manus-safe.sql`** - ⭐ Versão RECOMENDADA com tratamento defensivo
+  - Verifica tipos de dados antes de converter (resolve erro "Sep")
+  - Usa valores padrão para dados NULL ou inválidos
+  - Trata datas armazenadas como texto
+  - Arredonda coordenadas geográficas
 
 ### 2. Documentação
 - **`GUIA_MIGRACAO_NEON.md`** - Guia passo-a-passo completo
@@ -40,7 +46,8 @@ Migrar dados do banco antigo **nexogeo_manus** para o novo banco **neondb** (nex
 #### Passo 1: Exportar
 1. Acesse o Neon SQL Editor
 2. Conecte ao banco **nexogeo_manus**
-3. Execute o conteúdo de `export-nexogeo-manus.sql`
+3. Execute o conteúdo de `export-nexogeo-manus-safe.sql` ⭐ (RECOMENDADO)
+   - Ou use `export-nexogeo-manus.sql` se não houver problemas com tipos
 4. Copie os comandos INSERT gerados
 
 #### Passo 2: Importar
