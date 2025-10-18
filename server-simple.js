@@ -50,7 +50,8 @@ async function handleAPI(req, res) {
       headers: req.headers,
       body: req.body,
       query: req.query,
-      url: req.url
+      url: req.url,
+      originalUrl: req.originalUrl || req.url // Adicionar originalUrl para compatibilidade
     };
 
     let responseData = null;

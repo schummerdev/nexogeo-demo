@@ -3601,9 +3601,12 @@ module.exports = async (req, res) => {
     }
 
     const { endpoint, id } = req.query;
-    const path = req.originalUrl ? req.originalUrl.replace('/api/caixa-misteriosa', '') : req.url.replace('/api/caixa-misteriosa', '');
+    // Usar req.originalPath se disponível (passado por api/index.js), senão extrair manualmente
+    const path = req.originalPath ||
+                 (req.originalUrl ? req.originalUrl.replace('/api/caixa-misteriosa', '') : req.url.replace('/api/caixa-misteriosa', ''));
 
-    console.log('🕹️ [Caixa Misteriosa Handler] Rota:', path, 'Endpoint:', endpoint, 'ID:', id);
+    console.log('🕹️ [Caixa Misteriosa Handler] originalPath:', req.originalPath, 'originalUrl:', req.originalUrl, 'url:', req.url);
+    console.log('🕹️ [Caixa Misteriosa Handler] Rota extraída:', path, 'Endpoint:', endpoint, 'ID:', id);
 
     if (path.startsWith('/last-finished')) {
         return await getLastFinishedGame(req, res);

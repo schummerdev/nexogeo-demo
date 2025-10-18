@@ -20,7 +20,11 @@ module.exports = async function handler(req, res) {
                    req.connection?.remoteAddress ||
                    req.socket?.remoteAddress ||
                    'unknown';
-  const globalRateLimit = checkRateLimit(clientId, 60, 60000); // 60 req/min
+
+  // Rate limit mais permissivo em desenvolvimento para evitar erro 429 no React Strict Mode
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const rateLimit = isDevelopment ? 200 : 60; // 200 req/min em dev, 60 req/min em prod
+  const globalRateLimit = checkRateLimit(clientId, rateLimit, 60000);
 
   if (!globalRateLimit.allowed) {
     return res.status(429).json({
@@ -557,10 +561,24 @@ module.exports = async function handler(req, res) {
 
     } catch (error) {
       console.error('Erro ao buscar configurações:', error);
+
+      // Se for erro de autenticação/autorização, retornar 401/403
+      if (error.message && (
+        error.message.includes('Token') ||
+        error.message.includes('autenticação') ||
+        error.message.includes('Acesso não autorizado')
+      )) {
+        return res.status(401).json({
+          success: false,
+          message: error.message,
+          timestamp: new Date().toISOString()
+        });
+      }
+
       return res.status(500).json({
         success: false,
         error: 'Erro ao conectar com banco de dados',
-        
+        message: error.message,
         timestamp: new Date().toISOString()
       });
     }
@@ -1711,11 +1729,13 @@ module.exports = async function handler(req, res) {
 
   // Rota para o jogo Caixa Misteriosa (formato original)
   if (req.originalUrl && req.originalUrl.startsWith('/api/caixa-misteriosa')) {
+    console.log('🎮 [INDEX] Detectou rota caixa-misteriosa - originalUrl:', req.originalUrl);
     const caixaMisteriosaHandler = require('./caixa-misteriosa.js');
     // Ajustar URL para o padrão original
     const originalUrl = req.originalUrl;
     const path = originalUrl.replace('/api/caixa-misteriosa', '');
     req.originalPath = path;
+    console.log('🎮 [INDEX] Path extraído:', path, 'originalPath setado:', req.originalPath);
     return await caixaMisteriosaHandler(req, res);
   }
 

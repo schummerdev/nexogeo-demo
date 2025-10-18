@@ -103,7 +103,12 @@ const MapasPage = () => {
             ? fetchParticipantesUnificados(true)
             : fetchParticipantes().then(data => ({ data, stats: { total: data.length, regular: data.length, public: 0 } })),
           fetchPromocoes(),
-          includeCaixaMisteriosa ? fetchGameParticipantsStats() : Promise.resolve(null)
+          includeCaixaMisteriosa
+            ? fetchGameParticipantsStats().catch(err => {
+                console.warn('⚠️ Estatísticas do jogo não disponíveis:', err.message);
+                return null; // Retornar null em caso de erro
+              })
+            : Promise.resolve(null)
         ]);
 
         const participantesData = participantesResult.data || [];

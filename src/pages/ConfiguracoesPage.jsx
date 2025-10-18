@@ -470,6 +470,15 @@ const ConfiguracoesPage = () => {
         }
       } else {
         const errorData = await response.json();
+
+        // Mensagem específica para erro de autenticação
+        if (response.status === 401 || response.status === 403) {
+          alert('Sessão expirada ou sem permissão. Por favor, faça login novamente.');
+          localStorage.removeItem('authToken');
+          window.location.href = '/login';
+          return;
+        }
+
         alert(errorData.message || 'Erro ao salvar configurações');
       }
     } catch (error) {

@@ -32,12 +32,17 @@ const ParticipantesPage = () => {
 
   // Buscar participantes e promoções ao carregar o componente
   useEffect(() => {
+    let isMounted = true; // Flag para evitar setState após unmount
+
     const loadData = async () => {
       try {
         setLoading(true);
-        
+
         // Buscar participantes
         const participantesData = await fetchParticipantes();
+
+        if (!isMounted) return; // Cancelar se componente foi desmontado
+
         // Ajustar os nomes dos campos para corresponder ao frontend
         const formattedParticipantes = (participantesData || []).map(participante => ({
           id: participante.id,
@@ -53,19 +58,29 @@ const ParticipantesPage = () => {
           dataParticipacao: participante.participou_em || participante.data_participacao
         }));
         setParticipantes(formattedParticipantes);
-        
+
         // Buscar promoções para o filtro
         const promocoesData = await fetchPromocoes();
+        if (!isMounted) return; // Cancelar se componente foi desmontado
+
         setPromocoes(promocoesData);
       } catch (err) {
+        if (!isMounted) return; // Cancelar se componente foi desmontado
         setError('Falha ao carregar dados');
         console.error(err);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     loadData();
+
+    // Cleanup function para evitar setState em componente desmontado
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Função para filtrar participantes
