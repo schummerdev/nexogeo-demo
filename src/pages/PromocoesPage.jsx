@@ -200,12 +200,12 @@ const PromocoesPage = () => {
   const handleSocialNetworkLink = (promo, network) => {
     const origin = window.location.origin;
     const socialNetworks = {
-      facebook: { utmSource: 'facebook', utmMedium: 'social', icon: '📘' },
-      instagram: { utmSource: 'instagram', utmMedium: 'social', icon: '📷' },
-      youtube: { utmSource: 'youtube', utmMedium: 'video', icon: '📺' },
-      whatsapp: { utmSource: 'whatsapp', utmMedium: 'messaging', icon: '💬' },
-      website: { utmSource: 'website', utmMedium: 'referral', icon: '🌐' },
-      tv: { utmSource: 'tv', utmMedium: 'broadcast', icon: '📡' }
+      facebook: { utmSource: 'facebook', utmMedium: 'social', name: 'Facebook' },
+      instagram: { utmSource: 'instagram', utmMedium: 'social', name: 'Instagram' },
+      youtube: { utmSource: 'youtube', utmMedium: 'video', name: 'YouTube' },
+      whatsapp: { utmSource: 'whatsapp', utmMedium: 'messaging', name: 'WhatsApp' },
+      website: { utmSource: 'website', utmMedium: 'referral', name: 'Website' },
+      tv: { utmSource: 'tv', utmMedium: 'broadcast', name: 'TV' }
     };
 
     const config = socialNetworks[network];
@@ -213,7 +213,7 @@ const PromocoesPage = () => {
 
     const link = `${origin}/participar?id=${promo.id}&utm_source=${config.utmSource}&utm_medium=${config.utmMedium}`;
     navigator.clipboard.writeText(link);
-    showToast(`Link ${network.toUpperCase()} copiado!`, 'success');
+    showToast(`Link ${config.name} copiado!`, 'success');
   };
 
   const getStatusBadgeClass = (status) => {
@@ -379,46 +379,46 @@ const PromocoesPage = () => {
                     <td>
                       <div className="action-buttons">
                         <button
-                          className="btn-icon-small"
+                          className="btn-icon-small btn-social-facebook"
                           onClick={() => handleSocialNetworkLink(promo, 'facebook')}
                           title="Copiar Link Facebook"
                         >
-                          <span className="icon">📘</span>
+                          <span className="icon">f</span>
                         </button>
                         <button
-                          className="btn-icon-small"
+                          className="btn-icon-small btn-social-instagram"
                           onClick={() => handleSocialNetworkLink(promo, 'instagram')}
                           title="Copiar Link Instagram"
                         >
                           <span className="icon">📷</span>
                         </button>
                         <button
-                          className="btn-icon-small"
+                          className="btn-icon-small btn-social-youtube"
                           onClick={() => handleSocialNetworkLink(promo, 'youtube')}
                           title="Copiar Link YouTube"
                         >
-                          <span className="icon">📺</span>
+                          <span className="icon">▶</span>
                         </button>
                         <button
-                          className="btn-icon-small"
+                          className="btn-icon-small btn-social-whatsapp"
                           onClick={() => handleSocialNetworkLink(promo, 'whatsapp')}
                           title="Copiar Link WhatsApp"
                         >
                           <span className="icon">💬</span>
                         </button>
                         <button
-                          className="btn-icon-small"
+                          className="btn-icon-small btn-social-website"
                           onClick={() => handleSocialNetworkLink(promo, 'website')}
                           title="Copiar Link Website"
                         >
                           <span className="icon">🌐</span>
                         </button>
                         <button
-                          className="btn-icon-small"
+                          className="btn-icon-small btn-social-tv"
                           onClick={() => handleSocialNetworkLink(promo, 'tv')}
                           title="Copiar Link TV"
                         >
-                          <span className="icon">📡</span>
+                          <span className="icon">📺</span>
                         </button>
                         <button
                           className="btn-icon-small"
