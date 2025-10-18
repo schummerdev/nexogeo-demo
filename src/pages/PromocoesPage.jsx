@@ -163,10 +163,10 @@ const PromocoesPage = () => {
 
   const handleGenerateQRCode = (promo) => {
     const origin = window.location.origin;
-    const link = `${origin}/participar?id=${promo.id}`;
+    const link = `${origin}/participar?id=${promo.id}&utm_source=tv&utm_medium=broadcast`;
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(link)}`;
     window.open(qrUrl, '_blank');
-    showToast('QR Code gerado e aberto em nova aba!', 'success');
+    showToast('QR Code TV gerado e aberto em nova aba!', 'success');
   };
 
   const handleShortenLink = async (promo) => {
@@ -414,16 +414,9 @@ const PromocoesPage = () => {
                           <span className="icon">🌐</span>
                         </button>
                         <button
-                          className="btn-icon-small btn-social-tv"
-                          onClick={() => handleSocialNetworkLink(promo, 'tv')}
-                          title="Copiar Link TV"
-                        >
-                          <span className="icon">📺</span>
-                        </button>
-                        <button
-                          className="btn-icon-small"
+                          className="btn-icon-small btn-qrcode-tv"
                           onClick={() => handleGenerateQRCode(promo)}
-                          title="Gerar QR Code"
+                          title="Gerar QR Code para TV"
                         >
                           <span className="icon">🔳</span>
                         </button>
