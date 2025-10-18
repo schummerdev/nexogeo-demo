@@ -35,12 +35,7 @@ const Sidebar = () => {
               Participantes
             </NavLink>
           )}
-          
-          <NavLink to="/dashboard/gerador-links" className="nav-item">
-            <span className="nav-icon">🔗</span>
-            Gerador de Links
-          </NavLink>
-          
+
           <NavLink to="/dashboard/sorteio" className="nav-item">
             <span className="nav-icon">🎲</span>
             Módulo de Sorteio
