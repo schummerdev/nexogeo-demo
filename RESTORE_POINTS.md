@@ -496,4 +496,179 @@ git push origin vX.Y.Z-descricao
 
 ---
 
-**Última atualização:** 2025-10-06 20:15:00
+## v2.3 - Botões de Links de Redes Sociais (2025-10-18) ⭐⭐⭐ PRODUÇÃO
+
+**Tag:** `v2.3`
+**Commit:** `4501dfa`
+
+### 🎯 Estado do Sistema
+
+**INTERFACE OTIMIZADA** - Botões de redes sociais integrados diretamente em Promoções ✅
+
+### ⭐ Principais Funcionalidades
+
+#### 1️⃣ Botões de Redes Sociais em PromocoesPage
+Botões integrados diretamente na coluna de ações da tabela de promoções:
+
+**Redes Sociais (com UTM tracking):**
+- 📘 **Facebook** (Azul #1877f2) - utm_source=facebook&utm_medium=social
+- 📷 **Instagram** (Gradiente oficial) - utm_source=instagram&utm_medium=social
+- ▶ **YouTube** (Vermelho #ff0000) - utm_source=youtube&utm_medium=video
+- 📲 **WhatsApp** (Verde #25d366) - utm_source=whatsapp&utm_medium=messaging
+- 🌐 **Website** (Cinza #6c757d) - utm_source=website&utm_medium=referral
+
+**Utilitários:**
+- 🔳 **QR Code TV** (Roxo #8b5cf6) - Gera QR com utm_source=tv&utm_medium=broadcast
+- 🔗 **Encurtar Link** - Encurta e copia automaticamente
+
+**Gerenciamento:**
+- ✏️ **Editar** - Edita a promoção
+- 🗑️ **Excluir** - Exclui a promoção
+
+#### 2️⃣ Paginação de 50 Registros
+- PromocoesPage: Paginação cliente com 50 registros por página
+- ParticipantesPage: Paginação cliente com 50 registros por página
+- Navegação: Botões "Anterior" e "Próxima"
+- Info: "Página X de Y (N registros)"
+- Auto-reset: Volta para página 1 quando filtros mudam
+
+#### 3️⃣ Menu Simplificado
+- Removida opção "Gerador de Links" do menu lateral
+- Funcionalidade totalmente integrada em Promoções
+- Interface mais limpa e direta
+
+### 🎨 Design e UX
+
+**Cores Oficiais das Marcas:**
+- Facebook: #1877f2 (azul oficial)
+- Instagram: Gradiente #f09433 → #bc1888
+- YouTube: #ff0000 (vermelho)
+- WhatsApp: #25d366 (verde)
+- Website: #6c757d (cinza neutro)
+- QR Code TV: #8b5cf6 (roxo)
+
+**Ícones:**
+- Facebook: "F" maiúsculo (1.2rem)
+- Instagram: 📷
+- YouTube: ▶ (play)
+- WhatsApp: 📲 (telefone com seta)
+- Website: 🌐 (globo)
+- QR Code: 🔳 (quadrado branco com borda)
+
+### 📝 Arquivos Principais Alterados
+
+**Frontend:**
+- `src/pages/PromocoesPage.jsx`
+  - Botões de redes sociais na coluna de ações
+  - Função `handleSocialNetworkLink(promo, network)`
+  - Função `handleGenerateQRCode(promo)` com UTM TV
+  - Função `handleShortenLink(promo)`
+  - Paginação client-side (50 registros)
+
+- `src/pages/ParticipantesPage.jsx`
+  - Paginação client-side (50 registros)
+
+- `src/components/DashboardLayout/Sidebar.jsx`
+  - Removido item "Gerador de Links"
+
+**CSS:**
+- `src/pages/DashboardPages.css`
+  - Classes `.btn-social-facebook`, `.btn-social-instagram`, etc.
+  - Classe `.btn-qrcode-tv`
+  - Cores oficiais das marcas
+  - Efeitos hover
+
+### 🔄 Como Restaurar
+
+```bash
+# Checkout para v2.3
+git checkout v2.3
+
+# Ou criar branch de produção
+git checkout -b production-v2.3 v2.3
+```
+
+### 📊 Comparação com Versões Anteriores
+
+| Versão | Links Sociais | Paginação | Menu | Status |
+|--------|---------------|-----------|------|--------|
+| v1.3.2 | ❌ | ❌ | Menu separado | Estável |
+| **v2.3** | ✅ Integrados | ✅ 50/página | ✅ Simplificado | **Produção** |
+
+### ✅ Funcionalidades Completas
+
+1. **Geração de Links com UTM** - Cada rede social gera link com tracking
+2. **QR Code para TV** - Gera QR Code com link de TV automaticamente
+3. **Encurtamento de Links** - Integração com API is.gd/tinyurl
+4. **Paginação Eficiente** - 50 registros por vez, performance otimizada
+5. **Interface Limpa** - Tudo em um só lugar, sem menus extras
+
+### 🧪 Como Testar
+
+#### Teste 1: Botão Facebook
+1. Acesse `/dashboard/promocoes`
+2. Clique no botão 📘 (azul) de qualquer promoção
+3. **Resultado esperado:** Link copiado com `utm_source=facebook&utm_medium=social`
+4. **Toast:** "Link Facebook copiado!"
+
+#### Teste 2: QR Code TV
+1. Clique no botão 🔳 (roxo)
+2. **Resultado esperado:** QR Code abre em nova aba
+3. **Link no QR:** `participar?id=X&utm_source=tv&utm_medium=broadcast`
+4. **Toast:** "QR Code TV gerado e aberto em nova aba!"
+
+#### Teste 3: Paginação
+1. Se houver mais de 50 promoções, navegue pelas páginas
+2. **Resultado esperado:** Botões "Anterior" e "Próxima" funcionam
+3. **Info:** Mostra "Página X de Y (N registros)"
+
+### 📝 Commits Incluídos (desde v1.3.2)
+
+```
+4501dfa - refactor: Remove opção 'Gerar Links' do menu lateral
+4920b55 - refactor: Unifica botões TV e QR Code em único botão QR Code TV
+957bc51 - fix: Ajusta tamanhos de ícones Facebook e QR Code
+9be8366 - fix: Troca ícone QR Code para quadrado branco
+4572745 - refactor: Melhora ícones dos botões de redes sociais
+b32e6e0 - style: Atualiza botões de redes sociais com cores das logos oficiais
+a708000 - feat: Adiciona botões de links para redes sociais em PromocoesPage
+8e56f3f - refactor: Simplifica geração de links em PromocoesPage com botões diretos
+e61f6a3 - feat: Adiciona funcionalidade de geração de links em PromocoesPage
+c3ab60f - feat: Adiciona paginação de 50 registros em PromocoesPage e ParticipantesPage
+```
+
+### ⚙️ Configuração Necessária
+
+**Variáveis de Ambiente:**
+```env
+DATABASE_URL=postgresql://...
+JWT_SECRET=...
+GOOGLE_API_KEY=AIzaSy... (para Caixa Misteriosa)
+NODE_ENV=production
+```
+
+**Nenhuma migration necessária** - Esta versão não altera o banco de dados.
+
+### 🎯 Principais Melhorias sobre v1.3.2
+
+1. **UX Melhorada** - Tudo em um só lugar, sem navegação extra
+2. **Performance** - Paginação evita renderizar centenas de registros
+3. **Tracking Completo** - UTM parameters para cada rede social
+4. **Design Profissional** - Cores oficiais das marcas
+5. **Mobile Friendly** - Botões responsivos e acessíveis
+
+### ⚠️ Notas de Upgrade
+
+Se estiver vindo de v1.3.2:
+```bash
+git fetch --tags
+git checkout v2.3
+npm install
+npm run build
+```
+
+**Sem breaking changes** - Totalmente retrocompatível.
+
+---
+
+**Última atualização:** 2025-10-18 21:30:00
