@@ -383,7 +383,7 @@ const PromocoesPage = () => {
                           onClick={() => handleSocialNetworkLink(promo, 'facebook')}
                           title="Copiar Link Facebook"
                         >
-                          <span className="icon">f</span>
+                          <span className="icon">F</span>
                         </button>
                         <button
                           className="btn-icon-small btn-social-instagram"
@@ -404,7 +404,7 @@ const PromocoesPage = () => {
                           onClick={() => handleSocialNetworkLink(promo, 'whatsapp')}
                           title="Copiar Link WhatsApp"
                         >
-                          <span className="icon">💬</span>
+                          <span className="icon">📲</span>
                         </button>
                         <button
                           className="btn-icon-small btn-social-website"
@@ -425,7 +425,7 @@ const PromocoesPage = () => {
                           onClick={() => handleGenerateQRCode(promo)}
                           title="Gerar QR Code"
                         >
-                          <span className="icon">📱</span>
+                          <span className="icon">⬛</span>
                         </button>
                         <button
                           className="btn-icon-small"
