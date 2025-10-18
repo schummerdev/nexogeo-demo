@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Header from '../components/DashboardLayout/Header';
 import ConfirmModal from '../components/DashboardLayout/ConfirmModal';
-import GenerateLinkModal from '../components/GenerateLinkModal';
 import './DashboardPages.css';
 import { fetchPromocoes, createPromocao, updatePromocao, deletePromocao } from '../services/promocaoService';
 import { useToast } from '../contexts/ToastContext';
@@ -37,9 +36,6 @@ const PromocoesPage = () => {
   const [promoToDelete, setPromoToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1); // Página atual da paginação
   const ITEMS_PER_PAGE = 50; // Limite de 50 registros por página
-  const [showGenerateLinkModal, setShowGenerateLinkModal] = useState(false);
-  const [selectedPromo, setSelectedPromo] = useState(null);
-  const [emissora, setEmissora] = useState(null);
 
   // Buscar promoções ao carregar o componente
   useEffect(() => {
@@ -62,23 +58,6 @@ const PromocoesPage = () => {
     };
 
     loadPromocoes();
-  }, []);
-
-  // Carregar dados da emissora
-  useEffect(() => {
-    const loadEmissora = async () => {
-      try {
-        const response = await fetch('/api/?route=emissoras&endpoint=list');
-        const data = await response.json();
-        if (data.success && data.data.length > 0) {
-          setEmissora(data.data[0]); // Assumir primeira emissora
-        }
-      } catch (err) {
-        console.error('Erro ao carregar emissora:', err);
-      }
-    };
-
-    loadEmissora();
   }, []);
 
   const handleOpenModal = (promo = null) => {
@@ -182,14 +161,40 @@ const PromocoesPage = () => {
     showToast('Link copiado para a área de transferência!', 'success');
   };
 
-  const handleGenerateLinks = (promo) => {
-    setSelectedPromo(promo);
-    setShowGenerateLinkModal(true);
+  const handleGenerateQRCode = (promo) => {
+    const origin = window.location.origin;
+    const link = `${origin}/participar?id=${promo.id}`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(link)}`;
+    window.open(qrUrl, '_blank');
+    showToast('QR Code gerado e aberto em nova aba!', 'success');
   };
 
-  const handleCloseGenerateLinkModal = () => {
-    setShowGenerateLinkModal(false);
-    setSelectedPromo(null);
+  const handleShortenLink = async (promo) => {
+    try {
+      const origin = window.location.origin;
+      const originalLink = `${origin}/participar?id=${promo.id}`;
+
+      showToast('Encurtando link...', 'info');
+
+      const response = await fetch('/api/?route=encurtar-link', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url: originalLink })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        await navigator.clipboard.writeText(data.shortUrl);
+        showToast(`Link encurtado copiado: ${data.shortUrl}`, 'success');
+      } else {
+        throw new Error(data.error || 'Falha ao encurtar link');
+      }
+    } catch (error) {
+      showToast('Erro ao encurtar link: ' + error.message, 'error');
+    }
   };
 
   const getStatusBadgeClass = (status) => {
@@ -356,8 +361,15 @@ const PromocoesPage = () => {
                       <div className="action-buttons">
                         <button
                           className="btn-icon-small"
-                          onClick={() => handleGenerateLinks(promo)}
-                          title="Gerar Links"
+                          onClick={() => handleGenerateQRCode(promo)}
+                          title="Gerar QR Code"
+                        >
+                          <span className="icon">📱</span>
+                        </button>
+                        <button
+                          className="btn-icon-small"
+                          onClick={() => handleShortenLink(promo)}
+                          title="Encurtar Link"
                         >
                           <span className="icon">🔗</span>
                         </button>
@@ -546,14 +558,6 @@ const PromocoesPage = () => {
         message={`Tem certeza que deseja excluir a promoção "${promoToDelete?.nome}"? Esta ação não pode ser desfeita.`}
         confirmText="Excluir"
         cancelText="Cancelar"
-      />
-
-      {/* Modal de Geração de Links */}
-      <GenerateLinkModal
-        isOpen={showGenerateLinkModal}
-        promocao={selectedPromo}
-        emissora={emissora}
-        onClose={handleCloseGenerateLinkModal}
       />
     </>
   );
