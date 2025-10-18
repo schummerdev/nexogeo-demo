@@ -66,9 +66,20 @@ Migrar dados do banco antigo **nexogeo_manus** para o novo banco **neondb** (nex
 node verify-migration.js
 ```
 
-### Método 2: Backup Local (ALTERNATIVO)
+### Método 2: Backup Local (NÃO RECOMENDADO)
 
-Usar apenas se o Neon SQL Editor não funcionar:
+⚠️ **ATENÇÃO**: Este método NÃO funciona quando os bancos têm schemas diferentes (colunas diferentes, tipos diferentes, etc.).
+
+**Use apenas se**:
+- Os schemas forem 100% idênticos
+- O Neon SQL Editor estiver indisponível
+
+**Limitações conhecidas**:
+- ❌ Não converte colunas extras (google_id, role, etc.)
+- ❌ Não trata datas em formato JavaScript de forma confiável
+- ❌ Não adapta estruturas diferentes entre bancos
+
+**Se ainda quiser tentar**:
 
 1. **Gerar backup no banco antigo**:
    ```bash
