@@ -3,7 +3,7 @@ import Header from '../components/DashboardLayout/Header';
 import ConfirmModal from '../components/DashboardLayout/ConfirmModal';
 import EditParticipanteModal from '../components/EditParticipanteModal';
 import './DashboardPages.css';
-import { fetchParticipantes, deleteParticipante, updateParticipante } from '../services/participanteService';
+import { fetchParticipantes, fetchParticipantesUnificados, deleteParticipante, updateParticipante } from '../services/participanteService';
 import { fetchPromocoes } from '../services/promocaoService';
 import { useToast } from '../contexts/ToastContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -29,6 +29,8 @@ const ParticipantesPage = () => {
   const [participanteToDelete, setParticipanteToDelete] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [participanteToEdit, setParticipanteToEdit] = useState(null);
+  const [includeCaixaMisteriosa, setIncludeCaixaMisteriosa] = useState(true); // Toggle para incluir participantes públicos
+  const [participantStats, setParticipantStats] = useState({ total: 0, regular: 0, public: 0 }); // Estatísticas por tipo
 
   // Buscar participantes e promoções ao carregar o componente
   useEffect(() => {
@@ -38,32 +40,46 @@ const ParticipantesPage = () => {
       try {
         setLoading(true);
 
-        // Buscar participantes
-        const participantesData = await fetchParticipantes();
+        // Buscar participantes com base no toggle da Caixa Misteriosa
+        const [participantesResult, promocoesData] = await Promise.all([
+          includeCaixaMisteriosa
+            ? fetchParticipantesUnificados(true)
+            : fetchParticipantes().then(data => ({ data, stats: { total: data.length, regular: data.length, public: 0 } })),
+          fetchPromocoes()
+        ]);
 
         if (!isMounted) return; // Cancelar se componente foi desmontado
 
+        const participantesData = participantesResult.data || [];
+
         // Ajustar os nomes dos campos para corresponder ao frontend
-        const formattedParticipantes = (participantesData || []).map(participante => ({
+        const formattedParticipantes = participantesData.map(participante => ({
           id: participante.id,
-          nome: participante.nome,
-          telefone: participante.telefone,
-          bairro: participante.bairro,
-          cidade: participante.cidade,
+          nome: participante.name || participante.nome,
+          telefone: participante.phone || participante.telefone,
+          bairro: participante.neighborhood || participante.bairro,
+          cidade: participante.city || participante.cidade,
           email: participante.email,
           latitude: participante.latitude,
           longitude: participante.longitude,
           promocao_id: participante.promocao_id,
-          promocao: participante.promocao_nome || participante.promocao,
-          dataParticipacao: participante.participou_em || participante.data_participacao
+          promocao: participante.promocao_nome || participante.promocao || 'Caixa Misteriosa',
+          dataParticipacao: participante.created_at || participante.participou_em || participante.data_participacao,
+          participant_type: participante.participant_type || 'regular',
+          referral_code: participante.referral_code || null,
+          extra_guesses: participante.extra_guesses || 0,
+          total_submissions: participante.total_submissions || 0,
+          correct_guesses: participante.correct_guesses || 0
         }));
+
         setParticipantes(formattedParticipantes);
-
-        // Buscar promoções para o filtro
-        const promocoesData = await fetchPromocoes();
-        if (!isMounted) return; // Cancelar se componente foi desmontado
-
+        setParticipantStats(participantesResult.stats || { total: formattedParticipantes.length, regular: formattedParticipantes.length, public: 0 });
         setPromocoes(promocoesData);
+
+        console.log('✅ Participantes carregados:', {
+          total: formattedParticipantes.length,
+          stats: participantesResult.stats
+        });
       } catch (err) {
         if (!isMounted) return; // Cancelar se componente foi desmontado
         setError('Falha ao carregar dados');
@@ -81,7 +97,7 @@ const ParticipantesPage = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [includeCaixaMisteriosa]); // Recarregar quando toggle mudar
 
   // Função para filtrar participantes
   const filteredParticipantes = useMemo(() => {
@@ -272,6 +288,66 @@ const ParticipantesPage = () => {
       />
       
       <div className="participantes-content">
+        {/* Estatísticas */}
+        <div className="grid grid-3" style={{ gap: '16px', marginBottom: '24px' }}>
+          <div className="card-modern" style={{ padding: '20px', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '8px' }}>👥</div>
+            <h3 style={{
+              fontSize: '1.5rem',
+              fontWeight: '700',
+              color: 'var(--color-text)',
+              margin: '0 0 4px 0'
+            }}>
+              {participantStats.total}
+            </h3>
+            <p style={{
+              fontSize: '0.875rem',
+              color: 'var(--color-text-secondary)',
+              margin: 0
+            }}>
+              Total de Participantes
+            </p>
+          </div>
+
+          <div className="card-modern" style={{ padding: '20px', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🎯</div>
+            <h3 style={{
+              fontSize: '1.5rem',
+              fontWeight: '700',
+              color: 'var(--color-text)',
+              margin: '0 0 4px 0'
+            }}>
+              {participantStats.regular}
+            </h3>
+            <p style={{
+              fontSize: '0.875rem',
+              color: 'var(--color-text-secondary)',
+              margin: 0
+            }}>
+              Participantes Regulares
+            </p>
+          </div>
+
+          <div className="card-modern" style={{ padding: '20px', textAlign: 'center' }}>
+            <div style={{ fontSize: '2rem', marginBottom: '8px' }}>📦</div>
+            <h3 style={{
+              fontSize: '1.5rem',
+              fontWeight: '700',
+              color: 'var(--color-text)',
+              margin: '0 0 4px 0'
+            }}>
+              {participantStats.public}
+            </h3>
+            <p style={{
+              fontSize: '0.875rem',
+              color: 'var(--color-text-secondary)',
+              margin: 0
+            }}>
+              Caixa Misteriosa
+            </p>
+          </div>
+        </div>
+
         {/* Barra de Ações */}
         <div className="actions-bar">
           <div className="search-box">
@@ -304,6 +380,36 @@ const ParticipantesPage = () => {
               Exportar Dados
             </button>
           )}
+
+          {/* Toggle Caixa Misteriosa */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '8px 12px',
+            background: includeCaixaMisteriosa ? 'rgba(139, 92, 246, 0.1)' : 'var(--color-background)',
+            border: '1px solid var(--color-border)',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            transition: 'all 0.2s'
+          }}
+          onClick={() => setIncludeCaixaMisteriosa(!includeCaixaMisteriosa)}
+          title="Incluir participantes da Caixa Misteriosa"
+          >
+            <input
+              type="checkbox"
+              checked={includeCaixaMisteriosa}
+              onChange={(e) => setIncludeCaixaMisteriosa(e.target.checked)}
+              style={{ cursor: 'pointer' }}
+            />
+            <span style={{
+              fontSize: '0.875rem',
+              fontWeight: '500',
+              color: 'var(--color-text)'
+            }}>
+              📦 Incluir Caixa Misteriosa
+            </span>
+          </div>
         </div>
 
         {/* Tabela de Participantes */}
@@ -316,6 +422,7 @@ const ParticipantesPage = () => {
                 <th>Bairro</th>
                 <th>Cidade</th>
                 <th>Promoção</th>
+                <th>Tipo</th>
                 <th>Data de Participação</th>
                 <th>Ações</th>
               </tr>
@@ -329,8 +436,26 @@ const ParticipantesPage = () => {
                     <td>{participante.bairro}</td>
                     <td>{participante.cidade}</td>
                     <td>{participante.promocao}</td>
+                    <td>
+                      <span style={{
+                        display: 'inline-block',
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontSize: '0.75rem',
+                        fontWeight: '600',
+                        background: participante.participant_type === 'public'
+                          ? 'rgba(139, 92, 246, 0.1)'
+                          : 'rgba(59, 130, 246, 0.1)',
+                        color: participante.participant_type === 'public'
+                          ? '#8b5cf6'
+                          : '#3b82f6',
+                        border: `1px solid ${participante.participant_type === 'public' ? '#8b5cf6' : '#3b82f6'}`
+                      }}>
+                        {participante.participant_type === 'public' ? '📦 Caixa Misteriosa' : '🎯 Regular'}
+                      </span>
+                    </td>
                     <td>{
-                      participante.dataParticipacao && !isNaN(new Date(participante.dataParticipacao)) 
+                      participante.dataParticipacao && !isNaN(new Date(participante.dataParticipacao))
                         ? new Date(participante.dataParticipacao).toLocaleDateString('pt-BR')
                         : 'Data inválida'
                     }</td>
@@ -359,7 +484,7 @@ const ParticipantesPage = () => {
                 ))
               ) : (
                 <tr className="empty-state">
-                  <td colSpan="7">
+                  <td colSpan="8">
                     <div className="empty-message">
                       <span className="empty-icon">📭</span>
                       <p>Nenhum participante encontrado</p>
