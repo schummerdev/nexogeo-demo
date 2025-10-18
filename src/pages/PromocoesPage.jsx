@@ -197,6 +197,25 @@ const PromocoesPage = () => {
     }
   };
 
+  const handleSocialNetworkLink = (promo, network) => {
+    const origin = window.location.origin;
+    const socialNetworks = {
+      facebook: { utmSource: 'facebook', utmMedium: 'social', icon: '📘' },
+      instagram: { utmSource: 'instagram', utmMedium: 'social', icon: '📷' },
+      youtube: { utmSource: 'youtube', utmMedium: 'video', icon: '📺' },
+      whatsapp: { utmSource: 'whatsapp', utmMedium: 'messaging', icon: '💬' },
+      website: { utmSource: 'website', utmMedium: 'referral', icon: '🌐' },
+      tv: { utmSource: 'tv', utmMedium: 'broadcast', icon: '📡' }
+    };
+
+    const config = socialNetworks[network];
+    if (!config) return;
+
+    const link = `${origin}/participar?id=${promo.id}&utm_source=${config.utmSource}&utm_medium=${config.utmMedium}`;
+    navigator.clipboard.writeText(link);
+    showToast(`Link ${network.toUpperCase()} copiado!`, 'success');
+  };
+
   const getStatusBadgeClass = (status) => {
     switch (status) {
       case 'ativa': return 'status-badge status-ativa';
@@ -361,6 +380,48 @@ const PromocoesPage = () => {
                       <div className="action-buttons">
                         <button
                           className="btn-icon-small"
+                          onClick={() => handleSocialNetworkLink(promo, 'facebook')}
+                          title="Copiar Link Facebook"
+                        >
+                          <span className="icon">📘</span>
+                        </button>
+                        <button
+                          className="btn-icon-small"
+                          onClick={() => handleSocialNetworkLink(promo, 'instagram')}
+                          title="Copiar Link Instagram"
+                        >
+                          <span className="icon">📷</span>
+                        </button>
+                        <button
+                          className="btn-icon-small"
+                          onClick={() => handleSocialNetworkLink(promo, 'youtube')}
+                          title="Copiar Link YouTube"
+                        >
+                          <span className="icon">📺</span>
+                        </button>
+                        <button
+                          className="btn-icon-small"
+                          onClick={() => handleSocialNetworkLink(promo, 'whatsapp')}
+                          title="Copiar Link WhatsApp"
+                        >
+                          <span className="icon">💬</span>
+                        </button>
+                        <button
+                          className="btn-icon-small"
+                          onClick={() => handleSocialNetworkLink(promo, 'website')}
+                          title="Copiar Link Website"
+                        >
+                          <span className="icon">🌐</span>
+                        </button>
+                        <button
+                          className="btn-icon-small"
+                          onClick={() => handleSocialNetworkLink(promo, 'tv')}
+                          title="Copiar Link TV"
+                        >
+                          <span className="icon">📡</span>
+                        </button>
+                        <button
+                          className="btn-icon-small"
                           onClick={() => handleGenerateQRCode(promo)}
                           title="Gerar QR Code"
                         >
@@ -373,15 +434,6 @@ const PromocoesPage = () => {
                         >
                           <span className="icon">🔗</span>
                         </button>
-                        {promo.link_participacao ? (
-                          <button
-                            className="btn-icon-small"
-                            onClick={() => handleCopyLink(promo.link_participacao)}
-                            title="Copiar Link"
-                          >
-                            <span className="icon">📋</span>
-                          </button>
-                        ) : null}
                         {canEditPromotion() && (
                           <button
                             className="btn-icon-small"
