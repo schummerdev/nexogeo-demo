@@ -425,7 +425,7 @@ const PromocoesPage = () => {
                           onClick={() => handleGenerateQRCode(promo)}
                           title="Gerar QR Code"
                         >
-                          <span className="icon">⬛</span>
+                          <span className="icon">▦</span>
                         </button>
                         <button
                           className="btn-icon-small"
