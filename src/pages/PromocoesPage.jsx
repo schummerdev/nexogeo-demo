@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import Header from '../components/DashboardLayout/Header';
 import ConfirmModal from '../components/DashboardLayout/ConfirmModal';
+import GenerateLinkModal from '../components/GenerateLinkModal';
 import './DashboardPages.css';
 import { fetchPromocoes, createPromocao, updatePromocao, deletePromocao } from '../services/promocaoService';
 import { useToast } from '../contexts/ToastContext';
@@ -36,6 +37,9 @@ const PromocoesPage = () => {
   const [promoToDelete, setPromoToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1); // Página atual da paginação
   const ITEMS_PER_PAGE = 50; // Limite de 50 registros por página
+  const [showGenerateLinkModal, setShowGenerateLinkModal] = useState(false);
+  const [selectedPromo, setSelectedPromo] = useState(null);
+  const [emissora, setEmissora] = useState(null);
 
   // Buscar promoções ao carregar o componente
   useEffect(() => {
@@ -58,6 +62,23 @@ const PromocoesPage = () => {
     };
 
     loadPromocoes();
+  }, []);
+
+  // Carregar dados da emissora
+  useEffect(() => {
+    const loadEmissora = async () => {
+      try {
+        const response = await fetch('/api/?route=emissoras&endpoint=list');
+        const data = await response.json();
+        if (data.success && data.data.length > 0) {
+          setEmissora(data.data[0]); // Assumir primeira emissora
+        }
+      } catch (err) {
+        console.error('Erro ao carregar emissora:', err);
+      }
+    };
+
+    loadEmissora();
   }, []);
 
   const handleOpenModal = (promo = null) => {
@@ -159,6 +180,16 @@ const PromocoesPage = () => {
   const handleCopyLink = (link) => {
     navigator.clipboard.writeText(link);
     showToast('Link copiado para a área de transferência!', 'success');
+  };
+
+  const handleGenerateLinks = (promo) => {
+    setSelectedPromo(promo);
+    setShowGenerateLinkModal(true);
+  };
+
+  const handleCloseGenerateLinkModal = () => {
+    setShowGenerateLinkModal(false);
+    setSelectedPromo(null);
   };
 
   const getStatusBadgeClass = (status) => {
@@ -323,8 +354,15 @@ const PromocoesPage = () => {
                     <td>{promo.numero_ganhadores || 3}</td>
                     <td>
                       <div className="action-buttons">
+                        <button
+                          className="btn-icon-small"
+                          onClick={() => handleGenerateLinks(promo)}
+                          title="Gerar Links"
+                        >
+                          <span className="icon">🔗</span>
+                        </button>
                         {promo.link_participacao ? (
-                          <button 
+                          <button
                             className="btn-icon-small"
                             onClick={() => handleCopyLink(promo.link_participacao)}
                             title="Copiar Link"
@@ -333,7 +371,7 @@ const PromocoesPage = () => {
                           </button>
                         ) : null}
                         {canEditPromotion() && (
-                          <button 
+                          <button
                             className="btn-icon-small"
                             onClick={() => handleOpenModal(promo)}
                             title="Editar"
@@ -342,7 +380,7 @@ const PromocoesPage = () => {
                           </button>
                         )}
                         {canDeletePromotion() && (
-                          <button 
+                          <button
                             className="btn-icon-small"
                             onClick={() => handleDeletePromo(promo.id)}
                             title="Excluir"
@@ -508,6 +546,14 @@ const PromocoesPage = () => {
         message={`Tem certeza que deseja excluir a promoção "${promoToDelete?.nome}"? Esta ação não pode ser desfeita.`}
         confirmText="Excluir"
         cancelText="Cancelar"
+      />
+
+      {/* Modal de Geração de Links */}
+      <GenerateLinkModal
+        isOpen={showGenerateLinkModal}
+        promocao={selectedPromo}
+        emissora={emissora}
+        onClose={handleCloseGenerateLinkModal}
       />
     </>
   );
